@@ -155,7 +155,7 @@
             downloadLink.style.display = 'none';
 
             try {
-                const response = await fetch('https://tomato-h0xp.onrender.com', {
+                const response = await fetch('https://tomato-h0xp.onrender.com/upload/srt-summary', {
                     method: 'POST',
                     body: formData
                 });
@@ -192,7 +192,7 @@
             formData.append("segmentLength", segmentLength);
 
             try {
-                const response = await fetch("https://tomato-h0xp.onrender.com", {
+                const response = await fetch("https://tomato-h0xp.onrender.com/upload/audio-transcription", {
                     method: "POST",
                     body: formData,
                 });
@@ -228,7 +228,7 @@
             downloadLink.style.display = 'none';
 
             try {
-                const response = await fetch('https://tomato-h0xp.onrender.com', {
+                const response = await fetch('https://tomato-h0xp.onrender.com/upload/audio-to-srt', {
                     method: 'POST',
                     body: formData
                 });
