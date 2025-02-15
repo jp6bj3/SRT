@@ -88,6 +88,7 @@
         <div class="container">
             <h1>SRT 摘要生成器</h1>
             <input type="file" id="fileInput" accept=".srt">
+            <input type="email" id="emailInputSrt" placeholder="請輸入您的電子郵件地址" required>
             <button id="uploadButton">生成摘要</button>
             <p id="errorMessage" class="error"></p>
             <a id="downloadLink" href="#" download="srt_summary.txt" style="display: none;">點此下載摘要檔案</a>
@@ -101,6 +102,7 @@
                 <input type="file" id="audioFile" accept=".wav" required>
                 <label for="segmentLength">片段長度（秒）：</label>
                 <input type="number" id="segmentLength" value="30" min="1" required>
+                <input type="email" id="emailInputTranscription" placeholder="請輸入您的電子郵件地址" required>
                 <button type="submit">開始轉錄</button>
             </form>
             <div id="output" class="output" style="display: none;">
@@ -116,6 +118,7 @@
                 <div class="file-input">
                     <label for="audioFileSRT">選擇音頻文件：</label>
                     <input type="file" id="audioFileSRT" name="audioFile" accept=".wav,.mp3" required>
+                    <input type="email" id="emailInputSrtTranscription" name="email" placeholder="請輸入您的電子郵件地址" required>
                 </div>
                 <button type="submit" class="btn">上傳並轉錄</button>
             </form>
@@ -140,6 +143,7 @@
         // SRT 摘要生成器邏輯
         document.getElementById('uploadButton').addEventListener('click', async function () {
             const fileInput = document.getElementById('fileInput');
+            const emailInput = document.getElementById('emailInputSrt');
             const errorMessage = document.getElementById('errorMessage');
             const downloadLink = document.getElementById('downloadLink');
 
@@ -148,8 +152,14 @@
                 return;
             }
 
+            if (!emailInput.value) {
+                errorMessage.textContent = '請輸入電子郵件地址！';
+                return;
+            }
+
             const formData = new FormData();
             formData.append('file', fileInput.files[0]);
+            formData.append('email', emailInput.value);
 
             errorMessage.textContent = '正在處理，請稍候...';
             downloadLink.style.display = 'none';
@@ -165,7 +175,7 @@
                     const url = URL.createObjectURL(blob);
                     downloadLink.href = url;
                     downloadLink.style.display = 'inline-block';
-                    errorMessage.textContent = '';
+                    errorMessage.textContent = '處理完成！結果將發送到您的電子郵件。';
                 } else {
                     const errorText = await response.text();
                     errorMessage.textContent = `處理失敗：${errorText}`;
@@ -181,15 +191,22 @@
             event.preventDefault();
             const audioFile = document.getElementById('audioFile').files[0];
             const segmentLength = document.getElementById('segmentLength').value;
+            const email = document.getElementById('emailInputTranscription').value;
 
             if (!audioFile) {
                 alert("請上傳音頻檔案！");
                 return;
             }
 
+            if (!email) {
+                alert("請輸入電子郵件地址！");
+                return;
+            }
+
             const formData = new FormData();
             formData.append("audioFile", audioFile);
             formData.append("segmentLength", segmentLength);
+            formData.append("email", email);
 
             try {
                 const response = await fetch("https://tomato-h0xp.onrender.com/upload/audio-transcription", {
@@ -206,6 +223,7 @@
                 downloadLink.href = URL.createObjectURL(blob);
 
                 document.getElementById("output").style.display = "block";
+                alert("轉錄完成！結果將發送到您的電子郵件。");
             } catch (error) {
                 alert(error.message);
             }
@@ -216,11 +234,20 @@
             event.preventDefault();
             const formData = new FormData();
             const fileInput = document.getElementById('audioFileSRT');
+            const emailInput = document.getElementById('emailInputSrtTranscription');
+
             if (!fileInput.files.length) {
                 alert('請選擇一個音頻文件！');
                 return;
             }
+
+            if (!emailInput.value) {
+                alert('請輸入電子郵件地址！');
+                return;
+            }
+
             formData.append('audioFile', fileInput.files[0]);
+            formData.append('email', emailInput.value);
 
             const messageDiv = document.getElementById('messageSRT');
             const downloadLink = document.getElementById('downloadLinkSRT');
@@ -238,7 +265,7 @@
                     const url = URL.createObjectURL(blob);
                     downloadLink.href = url;
                     downloadLink.style.display = 'inline-block';
-                    messageDiv.textContent = '轉錄完成！點擊下載結果。';
+                    messageDiv.textContent = '轉錄完成！結果將發送到您的電子郵件。';
                 } else {
                     const errorText = await response.text();
                     messageDiv.textContent = `轉錄失敗：${errorText}`;
