@@ -7,8 +7,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #4F46E5;
-            --primary-hover: #4338CA;
+            --primary-color: #47657d;
+            --primary-hover: #1f9bb7;
             --background-color: #F3F4F6;
             --card-background: #FFFFFF;
             --text-color: #1F2937;
@@ -218,6 +218,13 @@
             display: block;
         }
 
+        .content-section {
+    display: none;
+}
+.content-section.active {
+    display: block;
+}
+
         @media (max-width: 640px) {
             .tabs {
                 flex-direction: column;
@@ -264,7 +271,7 @@
 
     <div class="container">
         <!-- SRT 摘要生成器 -->
-        <div id="srt" class="tab-content active">
+        <div id="srt" class="content-section active">
             <div class="card fade-in">
                 <h1>SRT 摘要生成器</h1>
                 <div class="file-input-container">
@@ -292,7 +299,7 @@
         </div>
 
         <!-- 語音轉文字工具 -->
-        <div id="transcription" class="tab-content">
+        <div id="transcription" class="content-section">
             <div class="card fade-in">
                 <h1>語音轉文字工具</h1>
                 <form id="transcriptionForm">
@@ -326,7 +333,7 @@
         </div>
 
         <!-- 音頻轉 SRT 工具 -->
-        <div id="srt-transcription" class="tab-content">
+        <div id="srt-transcription" class="content-section">
             <div class="card fade-in">
                 <h1>音頻轉 SRT 工具</h1>
                 <form id="uploadForm">
@@ -359,14 +366,29 @@
     <script>
         // Tab switching logic
         const tabs = document.querySelectorAll('.tab');
-        const tabContents = document.querySelectorAll('.tab-content');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        // 確保只有第一個內容區域是活動的
+        contentSections.forEach((section, index) => {
+            section.classList.remove('active');
+            if (index === 0) {
+                section.classList.add('active');
+            }
+        });
 
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
+                // 移除所有標籤和內容的活動狀態
                 tabs.forEach(t => t.classList.remove('active'));
-                tabContents.forEach(tc => tc.classList.remove('active'));
+                contentSections.forEach(section => section.classList.remove('active'));
+                
+                // 啟用當前標籤和對應的內容
                 tab.classList.add('active');
-                document.getElementById(tab.dataset.tab).classList.add('active');
+                const targetId = tab.getAttribute('data-tab');
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                }
             });
         });
 
