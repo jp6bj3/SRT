@@ -23,6 +23,13 @@
             box-sizing: border-box;
         }
 
+        .content-section {
+    display: none;
+}
+.content-section.active {
+    display: block;
+}
+
         body {
             font-family: 'SF Pro TC', 'SF Pro Text', 'SF Pro Icons', 'PingFang TC', 'Helvetica Neue', 'Helvetica', 'Arial', 'Microsoft JhengHei', sans-serif;
             background-color: var(--background-color);
@@ -218,13 +225,6 @@
             display: block;
         }
 
-        .content-section {
-    display: none;
-}
-.content-section.active {
-    display: block;
-}
-
         @media (max-width: 640px) {
             .tabs {
                 flex-direction: column;
@@ -272,6 +272,7 @@
     <div class="container">
         <!-- SRT 摘要生成器 -->
         <div id="srt" class="content-section active">
+
             <div class="card fade-in">
                 <h1>SRT 摘要生成器</h1>
                 <div class="file-input-container">
@@ -300,7 +301,7 @@
 
         <!-- 語音轉文字工具 -->
         <div id="transcription" class="content-section">
-            <div class="card fade-in">
+                        <div class="card fade-in">
                 <h1>語音轉文字工具</h1>
                 <form id="transcriptionForm">
                     <div class="file-input-container">
@@ -366,29 +367,14 @@
     <script>
         // Tab switching logic
         const tabs = document.querySelectorAll('.tab');
-        const contentSections = document.querySelectorAll('.content-section');
-
-        // 確保只有第一個內容區域是活動的
-        contentSections.forEach((section, index) => {
-            section.classList.remove('active');
-            if (index === 0) {
-                section.classList.add('active');
-            }
-        });
+        const tabContents = document.querySelectorAll('.content-section');
 
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
-                // 移除所有標籤和內容的活動狀態
                 tabs.forEach(t => t.classList.remove('active'));
-                contentSections.forEach(section => section.classList.remove('active'));
-                
-                // 啟用當前標籤和對應的內容
+                tabContents.forEach(tc => tc.classList.remove('active'));
                 tab.classList.add('active');
-                const targetId = tab.getAttribute('data-tab');
-                const targetSection = document.getElementById(targetId);
-                if (targetSection) {
-                    targetSection.classList.add('active');
-                }
+                document.getElementById(tab.dataset.tab).classList.add('active');
             });
         });
 
