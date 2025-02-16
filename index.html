@@ -250,6 +250,36 @@
         .fade-in {
             animation: fadeIn 0.3s ease-in;
         }
+
+        .help-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.help-button:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.help-button:active {
+    transform: translateY(0);
+}
     </style>
 </head>
 <body>
@@ -363,6 +393,9 @@
             </div>
         </div>
     </div>
+    <a href="log.html" class="help-button" title="查看使用統計">
+        <i class="fas fa-question"></i>
+    </a>
 
     <script>
         // Tab switching logic
